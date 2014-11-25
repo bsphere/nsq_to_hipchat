@@ -62,7 +62,7 @@ func main() {
 	req := hipchat.MessageRequest{
 		RoomId:        room,
 		From:          from,
-		Message:       "nsq_to_hipchat announcing events from topic '" + topic + "' to this room.",
+		Message:       "nsq_to_hipchat announcing messages from topic '" + topic + "' to this room.",
 		Color:         color,
 		MessageFormat: hipchat.FormatText,
 		Notify:        false,
