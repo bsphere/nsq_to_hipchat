@@ -21,12 +21,10 @@ func main() {
 	flag.StringVar(&token, "token", "", "HipChat auth token")
 	flag.Parse()
 
-	if lookupd == "" || topic == "" || room == "" || from == "" || token == "" {
-		flag.PrintDefaults()
-	}
-
 	if lookupd == "" || topic == "" || room == "" || from == "" || color == "" ||
 		token == "" {
+
+		flag.PrintDefaults()
 		log.Fatal("invalid options")
 	}
 

@@ -16,4 +16,4 @@ WORKDIR /go
 # build and install the source code
 RUN go install github.com/bsphere/nsq_to_hipchat
 
-ENTRYPOINT /go/bin/nsq_to_hipchat
+ENTRYPOINT ["/go/bin/nsq_to_hipchat"]
