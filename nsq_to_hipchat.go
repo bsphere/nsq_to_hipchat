@@ -28,23 +28,29 @@ func main() {
 		log.Fatal("invalid options")
 	}
 
+	messageRequest := func(msg string) hipchat.MessageRequest {
+		return hipchat.MessageRequest{
+			RoomId:        room,
+			From:          from,
+			Message:       msg,
+			Color:         color,
+			MessageFormat: hipchat.FormatText,
+			Notify:        false,
+		}
+	}
+
 	h := hipchat.Client{AuthToken: token}
 
-	channel := "nsq_to_hipchat" + strconv.FormatInt(time.Now().Unix(), 10) + "#ephemeral"
+	channel := "nsq_to_hipchat" + strconv.FormatInt(time.Now().Unix(), 10) +
+		"#ephemeral"
+
 	c, err := nsq.NewConsumer(topic, channel, nsq.NewConfig())
 	if err != nil {
 		log.Fatal(err)
 	}
 
 	c.AddHandler(nsq.HandlerFunc(func(m *nsq.Message) error {
-		req := hipchat.MessageRequest{
-			RoomId:        room,
-			From:          from,
-			Message:       string(m.Body),
-			Color:         color,
-			MessageFormat: hipchat.FormatText,
-			Notify:        false,
-		}
+		req := messageRequest(string(m.Body))
 
 		if err := h.PostMessage(req); err != nil {
 			log.Print(err)
@@ -59,14 +65,9 @@ func main() {
 		log.Fatal(err)
 	}
 
-	req := hipchat.MessageRequest{
-		RoomId:        room,
-		From:          from,
-		Message:       "nsq_to_hipchat announcing messages from topic '" + topic + "' to this room.",
-		Color:         color,
-		MessageFormat: hipchat.FormatText,
-		Notify:        false,
-	}
+	req := messageRequest(
+		"nsq_to_hipchat announcing messages from topic '" + topic +
+			"' to this room.")
 
 	if err := h.PostMessage(req); err != nil {
 		log.Print(err)
